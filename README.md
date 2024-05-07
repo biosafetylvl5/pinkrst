@@ -3,6 +3,8 @@ Opinionated ReStructured Text (.rst) Formatter inspired by [Black](https://githu
 
 Remember: [RST Files wear pink EVERY day of the week.](https://www.youtube.com/watch?v=xBbOAVSBvpE)
 
+Works well with [doc8](https://github.com/PyCQA/doc8)
+
 ## Install
 
 ``` bash
