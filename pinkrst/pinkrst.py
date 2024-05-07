@@ -118,16 +118,6 @@ def setupConsole():
     return Console()
 
 
-def main():
-    args = setupCLI()
-
-    console = setupConsole()
-
-    changed = sendFilesToProcessor(args, console)
-
-    handleCLIOutput(console, changed)
-
-
 def sendFilesToProcessor(args, console):
     files = []
     if args.recurse:
@@ -233,6 +223,16 @@ def setupCLI():
 
     args = parser.parse_args()
     return args
+
+
+def main():
+    args = setupCLI()
+
+    console = setupConsole()
+
+    changed = sendFilesToProcessor(args, console)
+
+    handleCLIOutput(console, changed)
 
 
 if __name__ == "__main__":
