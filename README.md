@@ -5,6 +5,8 @@ Remember: [RST Files wear pink EVERY day of the week.](https://www.youtube.com/w
 
 Works well with [doc8](https://github.com/PyCQA/doc8)
 
+There's only one [file](pinkrst/pinkrst.py), so read it if you want the docs.
+
 ## Install
 
 ``` bash
@@ -45,8 +47,6 @@ pink --no-recurse --replace-tabs --spaces-per-tab 4 --smart-wrap --max-line-leng
 
 ### CLI Arguments
 
-### Optional Arguments
-
 | Argument                          | Description                                                               |
 |-----------------------------------|---------------------------------------------------------------------------|
 | `-h, --help`                      | Show help message and exit.                                               |
@@ -55,8 +55,8 @@ pink --no-recurse --replace-tabs --spaces-per-tab 4 --smart-wrap --max-line-leng
 | `--disaple-replace-tabs`          | Disables replacing tabs with spaces                                        |
 | `--spaces-per-tab SPACESPERTAB`   | Specifies the number of spaces to replace each tab with. Default is 4 spaces. |
 | `--disable-trim-excess-empty-lines` | Disables trimming excess empty lines from files.                        |
-| `--disable-trailing-newline`      | Disable ensuring that files end with a newline character.                          |
-| `--disable-smart-wrap`            | Disable intelligently wraps long lines that exceed a specified width.             |
+| `--disable-trailing-newline`      | Disable ensuring that files end with a newline character.                 |
+| `--disable-smart-wrap`            | Disable intelligently wraping long lines that exceed a specified width.   |
 | `--max-line-length LINELENGTH`    | Sets the maximum line length after which wrapping should occur. Default is 120 characters. |
 
 
