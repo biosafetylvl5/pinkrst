@@ -57,7 +57,40 @@ def smartWrapLongLines(line):
         return [line]
 
 
-def process_file(file_path, args):
+def getLineProcessingFunctions(args):
+    replaceTabsWithSpacesCurried = lambda line: replaceTabsWithSpaces(
+        line, spacesPerTab=args.spacesPerTab
+    )
+    funcListWithArgs = [
+        [replaceTabsWithSpacesCurried, args.replaceTabsWithSpaces],
+        [removeTrailingWhitespace, args.removeTrailingWhitespace],
+        [smartWrapLongLines, args.smartWrapLongLines],
+    ]
+    funcsToUse = [func for func, enabled in funcListWithArgs if enabled]
+    return funcsToUse
+
+
+def workOnFileLines(args, fileOriginalLines):
+    processedLines = []
+    for originalLine in fileOriginalLines:
+        lines = [originalLine]
+        for f in getLineProcessingFunctions(args):
+            for line in lines:
+                lines = f(line)
+        processedLines.extend(lines)
+
+    if args.addTrailingNewLine:
+        processedLines = addTrailingNewLine(processedLines)
+    return processedLines
+
+
+def workOnCompleteFileString(args, processedString):
+    if args.trimExcessEmptyLines:
+        processedString = trimExcessEmptyLines(processedString)
+    return processedString
+
+
+def processFile(file_path, args):
     try:
         # Read the file
         with open(file_path, "r") as file:
@@ -65,31 +98,9 @@ def process_file(file_path, args):
 
         fileOriginalLines = fileOriginal.split("\n")
 
-        replaceTabsWithSpacesCurried = lambda line: replaceTabsWithSpaces(
-            line, spacesPerTab=args.spacesPerTab
-        )
-        funcListWithArgs = [
-            [replaceTabsWithSpacesCurried, args.replaceTabsWithSpaces],
-            [removeTrailingWhitespace, args.removeTrailingWhitespace],
-            [smartWrapLongLines, args.smartWrapLongLines],
-        ]
-        funcsToUse = [func for func, enabled in funcListWithArgs if enabled]
-
-        processedLines = []
-        for originalLine in fileOriginalLines:
-            lines = [originalLine]
-            for f in funcsToUse:
-                for line in lines:
-                    lines = f(line)
-            processedLines.extend(lines)
-
-        if args.addTrailingNewLine:
-            processedLines = addTrailingNewLine(processedLines)
-
+        processedLines = workOnFileLines(args, fileOriginalLines)
         processedString = "\n".join(processedLines)
-
-        if args.trimExcessEmptyLines:
-            processedString = trimExcessEmptyLines(processedString)
+        processedString = workOnCompleteFileString(args, processedString)
 
         if not processedString == fileOriginal:
             # Write the processed lines back to the file
@@ -108,6 +119,49 @@ def setupConsole():
 
 
 def main():
+    args = setupCLI()
+
+    console = setupConsole()
+
+    changed = sendFilesToProcessor(args, console)
+
+    handleCLIOutput(console, changed)
+
+
+def sendFilesToProcessor(args, console):
+    files = []
+    if args.recurse:
+        for root, dirs, filenames in os.walk(args.file[0]):
+            for filename in filenames:
+                files.append(os.path.join(root, filename))
+    files.extend(args.file)
+
+    changed = []
+    for file in files:
+        filename, fileExtension = os.path.splitext(file)
+        if ".rst" == fileExtension[-4:]:
+            change = processFile(file, args)
+            if change:
+                console.log("reformatted", file)
+            changed.append([file, change])
+    return changed
+
+
+def handleCLIOutput(console, changed):
+    if len(changed) == 0:
+        console.print(
+            "No rst files are present to be formatted. Nothing to do :sleeping_face:"
+        )
+        exit()
+
+    console.print("All done! :revolving_hearts:\n")
+
+    numChanged = sum([not change for file, change in changed])
+    if numChanged > 0:
+        console.print(f"{numChanged} files left unchanged")
+
+
+def setupCLI():
     parser = argparse.ArgumentParser(
         description="Process a file to remove trailing whitespaces,"
         "replace tabs with spaces, and avoid extra newlines at the end."
@@ -178,36 +232,7 @@ def main():
     )
 
     args = parser.parse_args()
-
-    console = setupConsole()
-
-    files = []
-    if args.recurse:
-        for root, dirs, filenames in os.walk(args.file[0]):
-            for filename in filenames:
-                files.append(os.path.join(root, filename))
-    files.extend(args.file)
-
-    changed = []
-    for file in files:
-        filename, fileExtension = os.path.splitext(file)
-        if ".rst" == fileExtension[-4:]:
-            change = process_file(file, args)
-            if change:
-                console.log("reformatted", file)
-            changed.append([file, change])
-
-    if len(changed) == 0:
-        console.print(
-            "No rst files are present to be formatted. Nothing to do :sleeping_face:"
-        )
-        exit()
-
-    console.print("All done! :revolving_hearts:\n")
-
-    numChanged = sum([not change for file, change in changed])
-    if numChanged > 0:
-        console.print(f"{numChanged} files left unchanged")
+    return args
 
 
 if __name__ == "__main__":
