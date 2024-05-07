@@ -40,7 +40,7 @@ def smartWrapLongLines(line):
         noWrapLineEndings = ["\\", "+"]
         if len(indent) > 1 and line[-1] in noWrapLineEndings:
             return [line]
-        return textwrap.wrap(
+        newLines = textwrap.wrap(
             line,
             width=120,
             initial_indent="",
@@ -49,6 +49,10 @@ def smartWrapLongLines(line):
             replace_whitespace=False,
             break_on_hyphens=False,
         )
+        if len(newLines) == 1 and indent + newLines[0] == line:
+            return [line]
+        else:
+            return newLines
     else:
         return [line]
 
@@ -131,7 +135,7 @@ def main():
         help="Disables formatting that removes trailing whitespace on each line",
     )
     parser.add_argument(
-        "--replace-tabs",
+        "--disable-replace-tabs",
         action="store_false",
         default=True,
         dest="replaceTabsWithSpaces",
@@ -151,16 +155,18 @@ def main():
         help="Disables trimming excess empty lines from files",
     )
     parser.add_argument(
-        "--add-trailing-newline",
-        action="store_true",
+        "--disable-add-trailing-newline",
+        action="store_false",
+        default=True,
         dest="addTrailingNewLine",
-        help="Ensure that files end with a newline character",
+        help="Disable ensuring files end with a newline character",
     )
     parser.add_argument(
-        "--smart-wrap",
-        action="store_true",
+        "--disable-smart-wrap",
+        action="store_false",
+        default=True,
         dest="smartWrapLongLines",
-        help="Intelligently wrap long lines that exceed a certain width",
+        help="Disable intelligently wrap long lines that exceed a certain width",
     )
     parser.add_argument(
         "--max-line-length",
