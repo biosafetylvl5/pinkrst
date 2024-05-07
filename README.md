@@ -38,11 +38,13 @@ pink --no-recurse # to process files in dir WITHOUT recusion
 ```
 
 ``` bash
-pink --no-recurse # to process files in dir WITHOUT recusion
+# to process files recursively in dir WITHOUT ensuring there's a trailing newline at the end of files
+pink --disable-trailing-newline 
 ```
 
 ``` bash
-pink --no-recurse --replace-tabs --spaces-per-tab 4 --smart-wrap --max-line-length 100 directory/ # or go crazy, see next section
+ # or go crazy, see next section
+pink --no-recurse --disable-replace-tabs --spaces-per-tab 4 --disable-smart-wrap --max-line-length 100 directory/
 ```
 
 ### CLI Arguments
@@ -52,7 +54,7 @@ pink --no-recurse --replace-tabs --spaces-per-tab 4 --smart-wrap --max-line-leng
 | `-h, --help`                      | Show help message and exit.                                               |
 | `-rx, --no-recurse`               | Turns off recursively parsing subdirectories. Recursion is enabled by default. |
 | `--disable-no-trailing-whitespace`| Disables the removal of trailing whitespace on each line                  |
-| `--disaple-replace-tabs`          | Disables replacing tabs with spaces                                        |
+| `--disable-replace-tabs`          | Disables replacing tabs with spaces                                        |
 | `--spaces-per-tab SPACESPERTAB`   | Specifies the number of spaces to replace each tab with. Default is 4 spaces. |
 | `--disable-trim-excess-empty-lines` | Disables trimming excess empty lines from files.                        |
 | `--disable-trailing-newline`      | Disable ensuring that files end with a newline character.                 |
