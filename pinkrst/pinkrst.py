@@ -118,7 +118,7 @@ def setupConsole():
     return Console()
 
 
-def sendFilesToProcessor(args, console):
+def collectFilesAndSendToProcessor(args, console):
     files = []
     if args.recurse:
         for root, dirs, filenames in os.walk(args.file[0]):
@@ -230,7 +230,7 @@ def main():
 
     console = setupConsole()
 
-    changed = sendFilesToProcessor(args, console)
+    changed = collectFilesAndSendToProcessor(args, console)
 
     handleCLIOutput(console, changed)
 
