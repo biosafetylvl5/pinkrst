@@ -1,4 +1,5 @@
 import os
+import re
 import textwrap
 
 import argparse
@@ -22,15 +23,97 @@ def trimExcessEmptyLines(filestring):
     return filestring
 
 
-def addTrailingNewLine(filelines):
-    if not filelines[-1] == "\n":
-        return filelines + ["\n"]
+def addTrailingNewLine(lines):
+    """Ensure the last element of a list of strings ends with a newline character.
+
+    This function checks if the last element in the list `lines` ends with
+    a newline character (`\\n`). If it does not, it appends a newline character
+    to the list. If the last element already ends with a newline character,
+    it returns the list unchanged.
+
+    Parameters
+    ----------
+    lines : list of str
+        A list of strings, each representing a line in a file.
+
+    Returns
+    -------
+    list of str
+        The modified list of strings. This list will be the same as the input
+        list if the last string already ends with a newline character.
+        Otherwise, it will be the input list with an additional newline character
+        appended.
+
+    Examples
+    --------
+    >>> addTrailingNewLine(["Line 1\\n", "Line 2"])
+    ["Line 1\\n", "Line 2", "\\n"]
+
+    >>> addTrailingNewLine(["Line 1\\n", "Line 2\\n"])
+    ["Line 1\\n", "Line 2\\n"]
+
+    >>> addTrailingNewLine(["Line 1", "Line 2"])
+    ["Line 1", "Line 2", "\\n"]
+
+    Notes
+    -----
+    - The function assumes that `lines` is a non-empty list.
+      If an empty list is passed, the function will raise an `IndexError`.
+    """
+
+    if not lines[-1] == "\n":
+        return lines + ["\n"]
     else:
-        return filelines
+        return lines
 
 
 def getIndent(line):
-    newLine = line.replace("- ", "  ").replace("* ", "  ")
+    """Return leading spaces or leading bullets from a line of text
+
+    This function replaces each occurrence of "- " "* " or "#. " (where # is a number)
+    with spaces, and then returns the left leading spaces.
+
+    Parameters
+    ----------
+    line : str
+        A line of text
+
+    Returns
+    -------
+    str
+        A substring of the original line that consists only of the leading "indent",
+        this could be spaces or bullets
+
+    Examples
+    --------
+    >>> getIndent("    Item 1")
+    '    '
+    >>> getIndent("  - Item 2")
+    '  - '
+    >>> getIndent("  - 1. Item 3: stacked bullets are returned")
+    '  - 1. '
+    >>> getIndent("  - Item A 1. Item B: interrupted bullets are not")
+    '  - '
+    >>> getIndent("    * Item 4")
+    '    * '
+    >>> getIndent("\\t* Item 5")
+    ''
+    >>> getIndent("No leading space")
+    ''
+    """
+    # This pattern matches a number followed by a period and a space,
+    # or "*" or "-" followed by a space
+    pattern = r"(\d+\.\s|\*\s|-\s)"
+
+    def replacement(match):
+        if match.group() in {"* ", "- "}:
+            return "  "  # Replace "* " or "- " with two spaces
+        else:
+            return " " * len(
+                match.group()
+            )  # Replace digit and period with spaces, maintaining length
+
+    newLine = re.sub(pattern, replacement, line)
     return line[0 : len(newLine) - len(newLine.lstrip(" "))]
 
 
