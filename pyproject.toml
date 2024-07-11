@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "pinkrst"
 version = "0.0.1"
-description = ""
+description="Opinionated ReStructured Text (.rst) Formatter"
 authors = ["Gwyn Uttmark <biosafetylevel5@gmail.com>"]
 
 packages = [{include="pinkrst", from="src"}]
@@ -14,7 +14,6 @@ classifiers = [
 
 [tool.poetry.dependencies] # must download to run
 python = ">=3.8"
-pygit2 = "*"
 rich = "*"
 rich-argparse = "*"
 
@@ -31,7 +30,7 @@ doc = [
 ]
 
 [tool.poetry.scripts]
-pink = "brassy.brass:run_from_CLI"
+pink = "pinkrst.pinkrst:main"
 
 [tool.poetry.urls]
 Homepage = "https://github.com/biosafetylvl5/pinkrst"
