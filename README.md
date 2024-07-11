@@ -10,13 +10,13 @@ There's only one [file](pinkrst/pinkrst.py), so read it if you want the docs.
 ## Install
 
 ``` bash
-pip3 install git+https://github.com/biosafetylvl5/pinkrst.git
+pip3 install pinkrst
 ```
 
 or
 
 ``` bash
-pip install git+https://github.com/biosafetylvl5/pinkrst.git
+pip install pinkrst
 ```
 
 ## Usage
