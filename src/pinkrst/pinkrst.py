@@ -23,6 +23,21 @@ def trimExcessEmptyLines(filestring):
     return filestring
 
 
+def isSectionHeaderUnderline(line):
+    if len(line) > 2:
+        charsInLine = list(set(line))
+        if len(charsInLine) == 1 and charsInLine[0] in ["#", "*", "=", "-", "^", '"']:
+            return True
+    return False
+
+
+def fixSectionHeaderUnderlines(lines):
+    for i in range(0, len(lines)):
+        if isSectionHeaderUnderline(lines[i]):
+            lines[i] = lines[i][0] * len(lines[i - 1])
+    return lines
+
+
 def addTrailingNewLine(lines):
     """Ensure the last element of a list of strings ends with a newline character.
 
@@ -149,6 +164,7 @@ def getLineProcessingFunctions(args):
         [removeTrailingWhitespace, args.removeTrailingWhitespace],
         [smartWrapLongLines, args.smartWrapLongLines],
     ]
+
     funcsToUse = [func for func, enabled in funcListWithArgs if enabled]
     return funcsToUse
 
@@ -182,6 +198,8 @@ def processFile(file_path, args):
         fileOriginalLines = fileOriginal.split("\n")
 
         processedLines = workOnFileLines(args, fileOriginalLines)
+        if args.fixSectionHeaderUnderlines:
+            processedLines = fixSectionHeaderUnderlines(processedLines)
         processedString = "\n".join(processedLines)
         processedString = workOnCompleteFileString(args, processedString)
 
@@ -260,6 +278,13 @@ def setupCLI():
         default=True,
         dest="removeTrailingWhitespace",
         help="Disables formatting that removes trailing whitespace on each line",
+    )
+    parser.add_argument(
+        "--disable-fix-section-underlines",
+        action="store_false",
+        default=True,
+        dest="fixSectionHeaderUnderlines",
+        help="Disables formatting that extends/shortens section underlines to match title",
     )
     parser.add_argument(
         "--disable-replace-tabs",

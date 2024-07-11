@@ -1,0 +1,38 @@
+[tool.poetry]
+name = "pinkrst"
+version = "0.0.1"
+description = ""
+authors = ["Gwyn Uttmark <biosafetylevel5@gmail.com>"]
+
+packages = [{include="pinkrst", from="src"}]
+
+readme = "README.md"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+
+[tool.poetry.dependencies] # must download to run
+python = ">=3.8"
+pygit2 = "*"
+rich = "*"
+rich-argparse = "*"
+
+# Doc group
+sphinx = { version = "*", optional = true }
+sphinxcontrib-runcmd = { version = "*", optional = true }
+sphinxcontrib-napoleon = { version = "*", optional = true }
+
+[tool.poetry.extras]
+doc = [
+    "sphinx",                    # Required for building documentation, v7.2 errors
+    "sphinxcontrib-runcmd",      # Required for running shell commands in documentation
+    "sphinxcontrib-napoleon",    # Required for Google-style docstrings
+]
+
+[tool.poetry.scripts]
+pink = "brassy.brass:run_from_CLI"
+
+[tool.poetry.urls]
+Homepage = "https://github.com/biosafetylvl5/pinkrst"
+Issues = "https://github.com/biosafetylvl5/pinkrst/issues"
