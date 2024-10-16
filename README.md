@@ -1,4 +1,10 @@
 # Pink RST 🩷
+![GitHub Release](https://img.shields.io/github/v/release/biosafetylvl5/pinkrst)
+![PyPI - Version](https://img.shields.io/pypi/v/pinkrst)
+![Pepy Total Downloads](https://img.shields.io/pepy/dt/pinkrst)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/pinkrst)
+
+
 Opinionated ReStructured Text (.rst) Formatter inspired by [Black](https://github.com/psf/black). 
 
 Remember: [RST Files wear pink EVERY day of the week.](https://www.youtube.com/watch?v=xBbOAVSBvpE)
