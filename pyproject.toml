@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pinkrst"
-version = "0.0.1"
+version = "0.0.1-1"
 description="Opinionated ReStructured Text (.rst) Formatter"
 authors = ["Gwyn Uttmark <biosafetylevel5@gmail.com>"]
 
@@ -13,7 +13,7 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies] # must download to run
-python = ">=3.8"
+python = ">=3.7"
 rich = "*"
 rich-argparse = "*"
 
