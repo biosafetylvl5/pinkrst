@@ -211,7 +211,7 @@ def processFile(file_path, args):
         return False
 
     except Exception as e:
-        print(f"Error processing the file {file}: {e}")
+        print(f"Error processing the file {file_path}: {e}")
 
 
 def setupConsole():
